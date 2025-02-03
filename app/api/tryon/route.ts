@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { fal } from '@fal-ai/client';
-import { initFalClient } from '@/lib/fal-client';
+
+export const runtime = 'edge';
+export const maxDuration = 300; // 5 minutes timeout
 
 export async function POST(request: Request) {
   try {
-    initFalClient();
     const body = await request.json();
     
     const result = await fal.subscribe('fashn/tryon', {
@@ -12,10 +13,6 @@ export async function POST(request: Request) {
         model_image: body.modelImage,
         garment_image: body.garmentImage,
         category: body.category,
-        garment_photo_type: body.garmentPhotoType || 'auto',
-        nsfw_filter: true,
-        guidance_scale: body.guidanceScale || 2,
-        timesteps: body.timesteps || 50,
       },
       pollInterval: 5000,
       logs: true,
